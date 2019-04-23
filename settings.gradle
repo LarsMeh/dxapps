@@ -1,5 +1,5 @@
 include 'dxa-chunkbench', 'dxa-helloworld', 'dxa-migration', 'dxa-chunkexample',
-        'dxa-terminal:client', 'dxa-terminal:common', 'dxa-terminal:server'
+        'dxa-terminal:client', 'dxa-terminal:common', 'dxa-terminal:server', 'dxa-hashmap'
 
 boolean isDevelop = true
 
