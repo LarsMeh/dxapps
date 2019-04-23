@@ -2,12 +2,15 @@ package de.hhu.bsinfo.dxapp;
 
 
 import de.hhu.bsinfo.dxram.app.Application;
+import de.hhu.bsinfo.dxram.datastructure.DataStructureService;
+import de.hhu.bsinfo.dxram.datastructure.util.HashFunctions;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
+import de.hhu.bsinfo.dxram.datastructure.HashMap;
 
-import java.util.HashMap;
 
 public class HashMapBenchmark extends Application {
+
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;
@@ -15,7 +18,7 @@ public class HashMapBenchmark extends Application {
 
     @Override
     public String getApplicationName() {
-        return "HelloApplication";
+        return "HashMapBenchmark";
     }
 
     @Override
@@ -26,6 +29,8 @@ public class HashMapBenchmark extends Application {
             return;
         }
 
+        DataStructureService service = getService(DataStructureService.class);
+
         TimeFormat timeFormat = TimeFormat.SECOND;
         final int entries = 5000000;
 
@@ -34,14 +39,14 @@ public class HashMapBenchmark extends Application {
             String fileName = "byteArrayBenchmark";
             final int from = 2;
             final int to = 4;
-            HashMap<byte[], byte[]> map = new HashMap<>();
+            HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
 
             ByteArrayBenchmark.startSinglecore(fileName, timeFormat, map, entries, from, to);
 
         } else {
 
             String fileName = "integerBenchmark";
-            HashMap<Integer, Integer> map = new HashMap<>();
+            HashMap<Integer, Integer> map = service.createHashMap("a", entries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
 
             IntegerBenchmark.startSinglecore(fileName, timeFormat, map, entries);
 

@@ -2,7 +2,7 @@ package de.hhu.bsinfo.dxapp;
 
 
 import java.io.File;
-import java.util.HashMap;
+import de.hhu.bsinfo.dxram.datastructure.HashMap;
 
 public class ByteArrayBenchmark {
 
