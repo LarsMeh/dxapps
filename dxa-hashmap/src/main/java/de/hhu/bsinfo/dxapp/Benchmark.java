@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Benchmark {
+public abstract class Benchmark {
 
-    static void throughput(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread) {
+    protected static void throughput(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread) {
         int counter = 0;
         long timestamp = p_timeFormat.getTime();
         long time_elapsed;
@@ -37,6 +37,10 @@ public class Benchmark {
         } catch (IOException | InterruptedException p_e) {
             p_e.printStackTrace();
         }
+
+    }
+
+    protected static void throughtputMulticore(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread, final int p_countThreads){
 
     }
 
