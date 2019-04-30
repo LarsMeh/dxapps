@@ -64,27 +64,29 @@ public class HashMapBenchmark extends Application {
         int numberOfEntries = Integer.parseInt(entriesValue);
         TimeFormat timeFormat = TimeFormat.SECOND;
 
-        String user = System.getProperty("user.name");
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format("/home/%s/dxlogs/hashmap/", user));
+
+        log.debug("execute benchmark");
 
         if (typeValue.equals("perf")) {
 
             if (datatypeValue.equals("non-prim")) {
-                builder.append("byteArrayBenchmark.csv");
+
+                log.debug("single non-prim");
 
                 final int from = 2;
                 final int to = 4;
                 HashMap<byte[], byte[]> map = dataStructureService.createHashMap("a", numberOfEntries, -1, to, to, HashFunctions.MURMUR3_32);
 
-                ByteArrayBenchmark.startSinglecore(new File(builder.toString()), timeFormat, map, numberOfEntries, from, to);
+                ByteArrayBenchmark.startSinglecore(new File("/tmp/byteArrayBenchmark.csv"), timeFormat, map, numberOfEntries, from, to);
 
             } else if (datatypeValue.equals("prim")) {
 
-                builder.append("integerBenchmark.csv");
+                log.debug("single prim");
+
                 HashMap<Integer, Integer> map = dataStructureService.createHashMap("b", numberOfEntries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
 
-                IntegerBenchmark.startSinglecore(new File(builder.toString()), timeFormat, map, numberOfEntries);
+                IntegerBenchmark.startSinglecore(new File("/tmp/integerBenchmark.csv"), timeFormat, map, numberOfEntries);
 
             } else {
                 System.err.println("Invalid value for parameter " + ARG_DATATYPE);
