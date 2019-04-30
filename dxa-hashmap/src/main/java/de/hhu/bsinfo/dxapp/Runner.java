@@ -5,9 +5,9 @@ import de.hhu.bsinfo.dxram.datastructure.HashMap;
 
 public abstract class Runner extends Thread {
 
-    HashMap m_map; // TODO: Import my HashMap
+    HashMap m_map;
     int m_counter;
-    int m_maxIterations;
+    final int m_maxIterations;
 
     Runner(final String p_name, HashMap p_map, final int p_maxIterations) {
         super(p_name);
@@ -18,7 +18,7 @@ public abstract class Runner extends Thread {
     @Override
     public abstract void run();
 
-    boolean isDone() {
+    final boolean isDone() {
         return m_counter == m_maxIterations;
     }
 

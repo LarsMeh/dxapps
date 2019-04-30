@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public abstract class Benchmark {
 
-    protected static void throughput(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread) {
+    static void throughput(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread) {
         int counter = 0;
         long timestamp = p_timeFormat.getTime();
         long time_elapsed;
@@ -37,11 +37,6 @@ public abstract class Benchmark {
         } catch (IOException | InterruptedException p_e) {
             p_e.printStackTrace();
         }
-
-    }
-
-    protected static void throughtputMulticore(final File p_output, final TimeFormat p_timeFormat, final Runner p_workingThread, final int p_countThreads){
-
     }
 
 }

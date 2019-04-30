@@ -82,7 +82,7 @@ public class HashMapBenchmark extends Application {
             } else if (datatypeValue.equals("prim")) {
 
                 builder.append("integerBenchmark.csv");
-                HashMap<Integer, Integer> map = dataStructureService.createHashMap("a", numberOfEntries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
+                HashMap<Integer, Integer> map = dataStructureService.createHashMap("b", numberOfEntries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
 
                 IntegerBenchmark.startSinglecore(new File(builder.toString()), timeFormat, map, numberOfEntries);
 
@@ -93,8 +93,24 @@ public class HashMapBenchmark extends Application {
 
         } else {
 
-            //
-            return;
+            if (datatypeValue.equals("non-prim")) {
+                builder.append("byteArrayMulticoreBenchmark.csv");
+
+                final int from = 2;
+                final int to = 4;
+                HashMap<byte[], byte[]> map = dataStructureService.createHashMap("c", numberOfEntries, -1, to, to, HashFunctions.MURMUR3_32);
+
+                ByteArrayBenchmark.startMulticore(new File(builder.toString()), timeFormat, map, numberOfEntries, from, to, 4);
+
+            } else if (datatypeValue.equals("prim")) {
+
+                builder.append("integerMulticoreBenchmark.csv");
+                HashMap<Integer, Integer> map = dataStructureService.createHashMap("d", numberOfEntries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
+
+            } else {
+                System.err.println("Invalid value for parameter " + ARG_DATATYPE);
+                return;
+            }
 
         }
     }
