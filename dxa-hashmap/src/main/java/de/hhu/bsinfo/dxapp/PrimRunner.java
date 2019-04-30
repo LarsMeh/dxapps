@@ -19,8 +19,4 @@ public class PrimRunner extends Runner {
         System.out.println("End PrimRunner");
     }
 
-    boolean isDone() {
-        return m_counter == m_maxIterations;
-    }
-
 }
