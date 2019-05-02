@@ -5,29 +5,40 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hhu.bsinfo.dxram.datastructure.HashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ByteArrayBenchmark extends Benchmark {
 
-    static void startSinglecore(final File p_file, final TimeFormat p_timeFormat, HashMap p_hashMap, final int p_entries, final int p_from, final int p_to) {
-        throughput(p_file, p_timeFormat, new NonPrimRunner("ByteArrayRunner", p_hashMap, p_entries, new ByteArrayPool(p_from, p_to)));
+    private final Logger log = LogManager.getFormatterLogger(ByteArrayBenchmark.class);
+
+    public ByteArrayBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, HashMap<byte[], byte[]> p_hashMap, int p_from, int p_to) {
+        super(p_file, p_timeFormat, p_entries, p_hashMap, p_from, p_to);
     }
 
-    static void startMulticore(final File p_output, final TimeFormat p_timeFormat, HashMap p_hashMap, int p_entries, final int p_from, final int p_to, final int p_countThreads) {
-        int counter = 0;
-        long timestamp = p_timeFormat.getTime();
-        long time_elapsed;
-        int countSec = 0;
+    private void startSinglecore() {
+        startMulticore(1);
+    }
 
-        final ByteArrayPool pool = new ByteArrayPool(p_from, p_to);
+    private void startMulticore(final int p_countThreads) {
+        log.debug("Initialize Benchmark for " + p_countThreads + " Threads");
+        int countOperations = 0;
+        long time_elapsed;
+        int timer = 0;
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        final java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
+
+        final ByteArrayPool pool = new ByteArrayPool(m_from, m_to);
         NonPrimRunner[] threads = new NonPrimRunner[p_countThreads];
 
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new NonPrimRunner(("NonPrimRunner-" + i), p_hashMap, p_entries, pool);
+            threads[i] = new NonPrimRunner(("NonPrimRunner-" + i), m_hashMap, m_entries, pool, atomicInteger);
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(p_output))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(m_file))) {
 
             startThreads(threads);
 
@@ -36,27 +47,50 @@ public class ByteArrayBenchmark extends Benchmark {
                 time_elapsed = System.nanoTime();
                 do {
                     Thread.sleep(1);
-                } while (System.nanoTime() - time_elapsed < timestamp);
+                } while (System.nanoTime() - time_elapsed < m_timeFormat.getTime());
 
                 // get number of operations
-                int tmp = threads[0].m_counter;
-                int operations = tmp - counter;
-                counter = tmp;
-                countSec++;
+                int tmp = atomicInteger.get();
+                int operations = tmp - countOperations;
+                countOperations = tmp;
+                timer++;
 
-                // write into file
-                bw.write(String.format("%d,%d\n", countSec, operations));
+                map.put(timer, operations);
             }
+
+            log.debug("Benchmark is done\nResults will be written to File: " + m_file.getAbsolutePath());
+
+            // write into file
+            for (int key : map.keySet()) {
+                bw.write(String.format("%d,%d\n", key, map.get(key)));
+            }
+
 
         } catch (IOException | InterruptedException p_e) {
             p_e.printStackTrace();
         }
     }
 
-    private static void startThreads(NonPrimRunner[] p_threads) {
+    private void startThreads(NonPrimRunner[] p_threads) {
+        log.debug("Start Threads");
         for (NonPrimRunner thread : p_threads) {
             thread.start();
         }
     }
 
+    @Override
+    public void startNonPrimitivePerformance(int p_cores) {
+        if (p_cores > Runtime.getRuntime().availableProcessors()) {
+            p_cores = Runtime.getRuntime().availableProcessors();
+            log.warn("Threads was set down to: " + p_cores + ", because no more supported");
+        } else if (p_cores == 1)
+            startSinglecore();
+        else
+            startMulticore(p_cores);
+    }
+
+    @Override
+    public void startPrimitivePerformance() {
+        System.err.println("In a non-primitive Benchmark a primitive method is called");
+    }
 }
