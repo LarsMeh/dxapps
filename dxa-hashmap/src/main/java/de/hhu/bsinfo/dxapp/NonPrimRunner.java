@@ -26,12 +26,14 @@ public class NonPrimRunner extends Runner {
 
     @Override
     public void run() {
-        System.out.println("Start PrimRunner");
+        while (m_atomicInteger.get() < m_maxIterations) {
+            put();
+        }
+    }
 
-        for (m_counter = 0; m_counter < m_maxIterations; m_counter++)
-            m_map.put(m_pool.next(), nextValue());
-
-        System.out.println("End PrimRunner");
+    private synchronized void put() {
+        m_map.put(m_pool.next(), nextValue());
+        m_atomicInteger.incrementAndGet();
     }
 
 
