@@ -6,14 +6,17 @@ import de.hhu.bsinfo.dxram.datastructure.HashMap;
 
 public class IntegerBenchmark extends Benchmark {
 
-
-    static void startSinglecore(final File p_file, final TimeFormat p_timeFormat, HashMap p_hashMap, final int p_entries) {
-        throughput(p_file, p_timeFormat, new PrimRunner("IntegerRunner", p_hashMap, p_entries));
+    public IntegerBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, HashMap<byte[], byte[]> p_hashMap, int p_from, int p_to) {
+        super(p_file, p_timeFormat, p_entries, p_hashMap, p_from, p_to);
     }
 
-    static void startMulticore(final File p_file, final TimeFormat p_timeFormat, HashMap p_hashMap, final int p_entries) {
-        int countThreads = Runtime.getRuntime().availableProcessors() * 2 - 3;
+    @Override
+    public void startNonPrimitivePerformance(int p_cores) {
 
     }
 
+    @Override
+    public void startPrimitivePerformance() {
+
+    }
 }
