@@ -31,6 +31,9 @@ public class NonPrimRunner extends Runner {
         }
     }
 
+    /**
+     * 
+     */
     private synchronized void put() {
         m_map.put(m_pool.next(), nextValue());
         m_atomicInteger.incrementAndGet();
