@@ -86,7 +86,7 @@ public class HashMapBenchmark extends Application {
                     System.out.println("Use " + SPLITTER + " to split argument and value of argument\n\nArguments which are required in the following order:\n\t" + ARG_TYPE + ": [" + TYPE_PERF + "," + TYPE_MEM + "]\n\t" + ARG_DATA + ": [" + DATA_PRIM + "," + DATA_NON_PRIM + "]\n\t" + ARG_ENTRIES + ": [positive Integer]\n\n " +
                             "Optional Argument:\n\t" + ARG_CORES + ": [positive Integer]");
                 } else
-                    System.err.println("If you use 1 argument it must be help");
+                    log.error("If you use 1 argument it must be help");
                 return;
             case 3:
                 current_args = p_args[0].split(SPLITTER);
@@ -112,7 +112,7 @@ public class HashMapBenchmark extends Application {
                     try {
                         entries = Integer.parseInt(current_args[1]);
                     } catch (NumberFormatException p_e) {
-                        System.err.println("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
+                        log.error("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
                         return;
                     }
                 else
@@ -144,7 +144,7 @@ public class HashMapBenchmark extends Application {
                     try {
                         entries = Integer.parseInt(current_args[1]);
                     } catch (NumberFormatException p_e) {
-                        System.err.println("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
+                        log.error("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
                         return;
                     }
                 else
@@ -155,14 +155,14 @@ public class HashMapBenchmark extends Application {
                     try {
                         cores = Integer.parseInt(current_args[1]);
                     } catch (NumberFormatException p_e) {
-                        System.err.println("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
+                        log.error("Value " + current_args[1] + " for argument " + ARG_ENTRIES + " could not be parsed");
                         return;
                     }
                 else
                     return;
                 break;
             default:
-                System.err.println("3 Arguments required or use argument help for more information");
+                log.error("3 Arguments required or use argument help for more information");
                 return;
         }
 
@@ -178,7 +178,7 @@ public class HashMapBenchmark extends Application {
                 benchmark.startNonPrimitivePerformance(cores);
 
             else if (data.equals(TYPE_MEM))
-                System.out.println("Call performance for non-primitive");
+                log.error("Call performance for non-primitive");
             else
                 throw new RuntimeException();
 
@@ -187,9 +187,9 @@ public class HashMapBenchmark extends Application {
             HashMap<Integer, Integer> map = service.createHashMap("b", entries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
 
             if (data.equals(TYPE_PERF))
-                System.out.println("Call performance for primitive");
+                log.error("Call performance for primitive");
             else if (data.equals(TYPE_MEM))
-                System.out.println("Call memory for primitive");
+                log.error("Call memory for primitive");
             else
                 throw new RuntimeException();
 
