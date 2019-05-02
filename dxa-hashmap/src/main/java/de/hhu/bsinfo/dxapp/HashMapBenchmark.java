@@ -169,26 +169,26 @@ public class HashMapBenchmark extends Application {
         log.debug("Arguments correct. The Benchmark will be selected.");
 
         // Call correct method
-        if (type.equals(DATA_NON_PRIM)) {
+        if (data.equals(DATA_NON_PRIM)) {
 
             HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
             benchmark = new ByteArrayBenchmark(new File("/tmp/byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, from, to);
 
-            if (data.equals(TYPE_PERF))
+            if (type.equals(TYPE_PERF))
                 benchmark.startNonPrimitivePerformance(cores);
 
-            else if (data.equals(TYPE_MEM))
+            else if (type.equals(TYPE_MEM))
                 log.error("Call performance for non-primitive");
             else
                 throw new RuntimeException();
 
-        } else if (type.equals(DATA_PRIM)) {
+        } else if (data.equals(DATA_PRIM)) {
 
             HashMap<Integer, Integer> map = service.createHashMap("b", entries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
 
-            if (data.equals(TYPE_PERF))
+            if (type.equals(TYPE_PERF))
                 log.error("Call performance for primitive");
-            else if (data.equals(TYPE_MEM))
+            else if (type.equals(TYPE_MEM))
                 log.error("Call memory for primitive");
             else
                 throw new RuntimeException();
