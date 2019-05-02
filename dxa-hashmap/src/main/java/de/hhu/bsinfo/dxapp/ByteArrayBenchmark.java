@@ -40,6 +40,8 @@ public class ByteArrayBenchmark extends Benchmark {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(m_file))) {
 
+            bw.write("Benchmark csv\n");
+
             startThreads(threads);
 
             while (!threads[0].isDone()) {
