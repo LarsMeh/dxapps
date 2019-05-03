@@ -24,7 +24,7 @@ public class ByteArrayBenchmark extends Benchmark {
     }
 
     private void startMulticore(final int p_countThreads) {
-        log.debug("Initialize Benchmark for " + p_countThreads + " Threads");
+        log.info("Initialize Benchmark for " + p_countThreads + " Threads");
         int countOperations = 0;
         long time_elapsed;
         int timer = 0;
@@ -60,7 +60,7 @@ public class ByteArrayBenchmark extends Benchmark {
                 map.put(timer, operations);
             }
 
-            log.debug("Benchmark is done\nResults will be written to File: " + m_file.getAbsolutePath());
+            log.info("Benchmark is done\nResults will be written to File: " + m_file.getAbsolutePath());
 
             // write into file
             for (int key : map.keySet()) {

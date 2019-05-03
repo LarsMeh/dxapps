@@ -43,7 +43,7 @@ public abstract class Benchmark {
                 } while (System.nanoTime() - time_elapsed < timestamp);
 
                 // get number of operations
-                int tmp = p_workingThread.m_counter;
+                int tmp = p_workingThread.m_atomicInteger.get();
                 int operations = tmp - counter;
                 counter = tmp;
                 countSec++;

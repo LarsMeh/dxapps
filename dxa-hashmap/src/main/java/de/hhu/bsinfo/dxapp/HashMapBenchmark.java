@@ -172,7 +172,7 @@ public class HashMapBenchmark extends Application {
         if (data.equals(DATA_NON_PRIM)) {
 
             HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
-            benchmark = new ByteArrayBenchmark(new File("/tmp/byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, from, to);
+            benchmark = new ByteArrayBenchmark(new File("/home/mehnert/benchmarkLogs/byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, from, to);
 
             if (type.equals(TYPE_PERF))
                 benchmark.startNonPrimitivePerformance(cores);
