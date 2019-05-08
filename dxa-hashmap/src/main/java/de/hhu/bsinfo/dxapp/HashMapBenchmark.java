@@ -70,7 +70,7 @@ public class HashMapBenchmark extends Application {
         final int from = 2;
         final int to = 4;
         final DataStructureService service = getService(DataStructureService.class);
-        String path = "/tmp/";
+        String path = "/home/mehnert/benchmarkLogs/";
         Benchmark benchmark;
 
         // Arguments
@@ -172,10 +172,10 @@ public class HashMapBenchmark extends Application {
         if (data.equals(DATA_NON_PRIM)) {
 
             HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
-            benchmark = new ByteArrayBenchmark(new File("/home/mehnert/benchmarkLogs/byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, from, to);
+            benchmark = new PerformanceBenchmark(new File(path + "byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, cores);
 
             if (type.equals(TYPE_PERF))
-                benchmark.startNonPrimitivePerformance(cores);
+                benchmark.start();
 
             else if (type.equals(TYPE_MEM))
                 log.error("Call performance for non-primitive");

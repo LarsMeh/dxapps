@@ -13,16 +13,16 @@ public abstract class Benchmark {
     protected final TimeFormat m_timeFormat;
     protected final int m_entries;
     protected final HashMap<byte[], byte[]> m_hashMap;
-    protected final int m_from;
-    protected final int m_to;
+    protected final int m_numberOfThreads;
+    protected int m_from;
+    protected int m_to;
 
-    public Benchmark(final File p_file, final TimeFormat p_timeFormat, final int p_entries, final HashMap<byte[], byte[]> p_hashMap, final int p_from, final int p_to) {
+    public Benchmark(final File p_file, final TimeFormat p_timeFormat, final int p_entries, final HashMap<byte[], byte[]> p_hashMap, final int p_numberOfThreads) {
         m_file = p_file;
         m_timeFormat = p_timeFormat;
         m_entries = p_entries;
         m_hashMap = p_hashMap;
-        m_from = p_from;
-        m_to = p_to;
+        m_numberOfThreads = p_numberOfThreads;
     }
 
     protected void throughput(final Runner p_workingThread) {
@@ -57,8 +57,6 @@ public abstract class Benchmark {
         }
     }
 
-    public abstract void startNonPrimitivePerformance(final int p_cores);
-
-    public abstract void startPrimitivePerformance();
+    abstract void start();
 
 }

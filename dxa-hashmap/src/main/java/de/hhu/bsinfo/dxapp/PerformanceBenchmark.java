@@ -11,20 +11,25 @@ import de.hhu.bsinfo.dxram.datastructure.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ByteArrayBenchmark extends Benchmark {
+public class PerformanceBenchmark extends Benchmark {
 
-    private final Logger log = LogManager.getFormatterLogger(ByteArrayBenchmark.class);
+    private final Logger log = LogManager.getFormatterLogger(PerformanceBenchmark.class);
 
-    public ByteArrayBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, HashMap<byte[], byte[]> p_hashMap, int p_from, int p_to) {
-        super(p_file, p_timeFormat, p_entries, p_hashMap, p_from, p_to);
+    private Runner[] m_runner;
+
+    public PerformanceBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, HashMap<byte[], byte[]> p_hashMap, final int p_numberOfThreads) {
+        super(p_file, p_timeFormat, p_entries, p_hashMap, p_numberOfThreads);
     }
 
-    private void startSinglecore() {
-        startMulticore(1);
+    void setPrim(){
+        m_runner = new PrimRunner[m_numberOfThreads];
     }
 
-    private void startMulticore(final int p_countThreads) {
-        log.info("Initialize Benchmark for " + p_countThreads + " Threads");
+    void setNonPrim(final int p_from, final int p_to){
+        m_runner = new NonPrimRunner[m_numberOfThreads];
+    }
+
+    void start(){
         int countOperations = 0;
         long time_elapsed;
         int timer = 0;
@@ -32,7 +37,7 @@ public class ByteArrayBenchmark extends Benchmark {
         final java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
 
         final ByteArrayPool pool = new ByteArrayPool(m_from, m_to);
-        NonPrimRunner[] threads = new NonPrimRunner[p_countThreads];
+        NonPrimRunner[] threads = new NonPrimRunner[1];
 
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new NonPrimRunner(("NonPrimRunner-" + i), m_hashMap, m_entries, pool, atomicInteger);
@@ -78,21 +83,5 @@ public class ByteArrayBenchmark extends Benchmark {
         for (NonPrimRunner thread : p_threads) {
             thread.start();
         }
-    }
-
-    @Override
-    public void startNonPrimitivePerformance(int p_cores) {
-        if (p_cores > Runtime.getRuntime().availableProcessors()) {
-            p_cores = Runtime.getRuntime().availableProcessors();
-            log.warn("Threads was set down to: " + p_cores + ", because no more supported");
-        } else if (p_cores == 1)
-            startSinglecore();
-        else
-            startMulticore(p_cores);
-    }
-
-    @Override
-    public void startPrimitivePerformance() {
-        System.err.println("In a non-primitive Benchmark a primitive method is called");
     }
 }
