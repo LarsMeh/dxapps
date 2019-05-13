@@ -26,18 +26,9 @@ public class NonPrimRunner extends Runner {
 
     @Override
     public void run() {
-        while (m_atomicInteger.get() < m_maxIterations) {
-            put();
+        while (m_atomicInteger.incrementAndGet() < m_maxIterations) {
+            m_map.put(m_pool.next(), nextValue());
         }
     }
-
-    /**
-     * 
-     */
-    private synchronized void put() {
-        m_map.put(m_pool.next(), nextValue());
-        m_atomicInteger.incrementAndGet();
-    }
-
 
 }
