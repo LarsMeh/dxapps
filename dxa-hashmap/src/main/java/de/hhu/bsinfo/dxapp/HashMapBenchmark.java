@@ -71,7 +71,7 @@ public class HashMapBenchmark extends Application {
         final int to = 4;
         final DataStructureService service = getService(DataStructureService.class);
         String path = "/home/mehnert/benchmarkLogs/";
-        PerformanceBenchmark benchmark;
+        Benchmark benchmark;
 
         // Arguments
         final int entries, cores;
@@ -169,35 +169,36 @@ public class HashMapBenchmark extends Application {
         log.debug("Arguments correct. The Benchmark will be selected.");
 
         // Call correct method
-        if (data.equals(DATA_NON_PRIM)) {
+        if (type.equals(TYPE_PERF)) {
 
-            HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
-            benchmark = new PerformanceBenchmark(new File(path + "byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, cores);
-            benchmark.setNonPrim(from, to);
+            benchmark = new PerformanceBenchmark(new File(path + "performanceBenchmark.csv"), TIME_FORMAT, entries, map, cores);
 
-            if (type.equals(TYPE_PERF))
-                benchmark.start();
-
-            else if (type.equals(TYPE_MEM))
-                log.error("Call performance for non-primitive");
-            else
+            if (data.equals(DATA_NON_PRIM)) {
+                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
+                benchmark.setNonPrim(map, from, to);
+            } else if (data.equals(DATA_PRIM)) {
+                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32);
+                benchmark.setPrim(map2);
+            } else
                 throw new RuntimeException();
 
-        } else if (data.equals(DATA_PRIM)) {
+        } else if (type.equals(TYPE_MEM)) {
 
-            HashMap<Integer, Integer> map = service.createHashMap("b", entries, -1, Integer.BYTES, Integer.BYTES, HashFunctions.MURMUR3_32);
+            benchmark = new MemoryBenchmark(new File(path + "memoryBenchmark.csv"), TIME_FORMAT, entries, map, cores, service);
 
-            if (type.equals(TYPE_PERF))
-                log.error("Call performance for primitive");
-            else if (type.equals(TYPE_MEM))
-                log.error("Call memory for primitive");
-            else
+            if (data.equals(TYPE_PERF)) {
+                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
+                benchmark.setNonPrim(map, from, to);
+            } else if (data.equals(TYPE_MEM)) {
+                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32);
+                benchmark.setPrim(map2);
+            } else
                 throw new RuntimeException();
 
         } else
             throw new RuntimeException();
 
-
+        benchmark.start();
     }
 
     /**
