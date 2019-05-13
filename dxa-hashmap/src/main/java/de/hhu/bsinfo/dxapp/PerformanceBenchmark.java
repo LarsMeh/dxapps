@@ -27,6 +27,8 @@ public class PerformanceBenchmark extends Benchmark {
 
     void setNonPrim(final int p_from, final int p_to){
         m_runner = new NonPrimRunner[m_numberOfThreads];
+        m_from = p_from;
+        m_to = p_to;
     }
 
     void start(){

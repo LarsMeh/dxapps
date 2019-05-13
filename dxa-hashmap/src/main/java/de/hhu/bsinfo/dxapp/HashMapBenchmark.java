@@ -71,7 +71,7 @@ public class HashMapBenchmark extends Application {
         final int to = 4;
         final DataStructureService service = getService(DataStructureService.class);
         String path = "/home/mehnert/benchmarkLogs/";
-        Benchmark benchmark;
+        PerformanceBenchmark benchmark;
 
         // Arguments
         final int entries, cores;
@@ -173,6 +173,7 @@ public class HashMapBenchmark extends Application {
 
             HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
             benchmark = new PerformanceBenchmark(new File(path + "byteArrayBenchmark.csv"), TIME_FORMAT, entries, map, cores);
+            benchmark.setNonPrim(from, to);
 
             if (type.equals(TYPE_PERF))
                 benchmark.start();
