@@ -7,23 +7,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.hhu.bsinfo.dxram.datastructure.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class PerformanceBenchmark extends Benchmark {
+class PerformanceBenchmark extends Benchmark {
 
     private final Logger log = LogManager.getFormatterLogger(PerformanceBenchmark.class);
 
-    public PerformanceBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, final int p_numberOfThreads) {
-        super(p_file, p_timeFormat, p_entries, p_hashMap, p_numberOfThreads);
+    PerformanceBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, final int p_numberOfThreads) {
+        super(p_file, p_timeFormat, p_entries, p_numberOfThreads);
     }
 
     void start() {
         int countOperations = 0;
         int timer = 0;
-        AtomicInteger atomicInteger = new AtomicInteger(0);
         final java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
+        AtomicInteger atomicInteger = new AtomicInteger(-1);
+
+        initThreads(atomicInteger);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(m_file))) {
 
@@ -33,7 +34,7 @@ public class PerformanceBenchmark extends Benchmark {
 
             while (!m_runner[0].isDone()) {
 
-                Thread.sleep(999);
+                Thread.sleep(m_timeFormat.getTimeMilli());
 
                 // get number of operations
                 int tmp = atomicInteger.get();
@@ -43,6 +44,8 @@ public class PerformanceBenchmark extends Benchmark {
 
                 map.put(timer, operations);
             }
+
+            finishedCorrectly(atomicInteger);
 
             log.info("Benchmark is done\nResults will be written to File: " + m_file.getAbsolutePath());
 

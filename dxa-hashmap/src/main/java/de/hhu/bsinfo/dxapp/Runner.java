@@ -17,8 +17,8 @@ public abstract class Runner extends Thread {
     @Override
     public abstract void run();
 
-    public final boolean isDone() {
-        return m_maxIterations == m_atomicInteger.get();
+    final boolean isDone() {
+        return m_maxIterations <= m_atomicInteger.get();
     }
 
 }

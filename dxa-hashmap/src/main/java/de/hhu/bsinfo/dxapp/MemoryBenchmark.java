@@ -1,42 +1,48 @@
 package de.hhu.bsinfo.dxapp;
 
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.hhu.bsinfo.dxram.datastructure.HashMap;
+import de.hhu.bsinfo.dxram.datastructure.DataStructureService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MemoryBenchmark extends Benchmark {
+class MemoryBenchmark extends Benchmark {
 
     private final Logger log = LogManager.getFormatterLogger(MemoryBenchmark.class);
 
-    public MemoryBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, final int p_numberOfThreads, final DataStructureService p_service) {
-        super(p_file, p_timeFormat, p_entries, p_hashMap, p_numberOfThreads);
+    private final DataStructureService m_service;
+
+    MemoryBenchmark(File p_file, TimeFormat p_timeFormat, int p_entries, final int p_numberOfThreads, final DataStructureService p_service) {
+        super(p_file, p_timeFormat, p_entries, p_numberOfThreads);
+        m_service = p_service;
     }
 
-    void start(){
-        int countOperations = 0;
-        AtomicInteger atomicInteger = new AtomicInteger(0);
+    void start() {
+        AtomicInteger atomicInteger = new AtomicInteger(-1);
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(m_file))) {
+        initThreads(atomicInteger);
 
-            bw.write("Memory Benchmark csv\n");
+        startThreads();
 
-            startThreads();
-
+        try {
             joinThreads();
-
-            log.debug("Starting with extraction")
-
-            p_service.extractMemoryInformation(m_map, m_file);
-
-        } catch (IOException | InterruptedException p_e) {
+        } catch (InterruptedException p_e) {
             p_e.printStackTrace();
         }
+
+        finishedCorrectly(atomicInteger);
+
+        log.debug("Starting with extraction");
+
+        try {
+            m_service.extractMemoryInformation(getMap(), m_file);
+        } catch (IOException p_e) {
+            p_e.printStackTrace();
+        }
+
+        log.info("Benchmark is finished");
+
     }
 }

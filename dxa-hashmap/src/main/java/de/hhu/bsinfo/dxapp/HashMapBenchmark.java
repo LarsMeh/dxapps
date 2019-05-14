@@ -36,6 +36,8 @@ public class HashMapBenchmark extends Application {
     private static final String SPLITTER;
     private static final TimeFormat TIME_FORMAT;
 
+    private static final boolean NO_OVERWRITE;
+
     static {
         ARG_TYPE = "type";
         ARG_DATA = "data";
@@ -50,6 +52,8 @@ public class HashMapBenchmark extends Application {
 
         SPLITTER = "=";
         TIME_FORMAT = TimeFormat.SECOND;
+
+        NO_OVERWRITE = true;
     }
 
 
@@ -166,31 +170,36 @@ public class HashMapBenchmark extends Application {
                 return;
         }
 
-        log.debug("Arguments correct. The Benchmark will be selected.");
+        log.debug("Arguments correct");
+        log.debug("Type: " + type);
+        log.debug("Data: " + data);
+        log.debug("Entries: %d", entries);
+        log.debug("Cores: %d", cores);
+        log.debug("The Benchmark will be selected.");
 
         // Call correct method
         if (type.equals(TYPE_PERF)) {
 
-            benchmark = new PerformanceBenchmark(new File(path + "performanceBenchmark.csv"), TIME_FORMAT, entries, map, cores);
+            benchmark = new PerformanceBenchmark(new File(path + "performanceBenchmark.csv"), TIME_FORMAT, entries, cores);
 
             if (data.equals(DATA_NON_PRIM)) {
-                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
+                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32, NO_OVERWRITE);
                 benchmark.setNonPrim(map, from, to);
             } else if (data.equals(DATA_PRIM)) {
-                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32);
+                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32, NO_OVERWRITE);
                 benchmark.setPrim(map2);
             } else
                 throw new RuntimeException();
 
         } else if (type.equals(TYPE_MEM)) {
 
-            benchmark = new MemoryBenchmark(new File(path + "memoryBenchmark.csv"), TIME_FORMAT, entries, map, cores, service);
+            benchmark = new MemoryBenchmark(new File(path + "memoryBenchmark.csv"), TIME_FORMAT, entries, cores, service);
 
-            if (data.equals(TYPE_PERF)) {
-                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32);
+            if (data.equals(DATA_NON_PRIM)) {
+                HashMap<byte[], byte[]> map = service.createHashMap("a", entries, -1, to, to, HashFunctions.MURMUR3_32, NO_OVERWRITE);
                 benchmark.setNonPrim(map, from, to);
-            } else if (data.equals(TYPE_MEM)) {
-                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32);
+            } else if (data.equals(DATA_PRIM)) {
+                HashMap<Integer, Integer> map2 = service.createHashMap("a", entries, -1, 4, 4, HashFunctions.MURMUR3_32, NO_OVERWRITE);
                 benchmark.setPrim(map2);
             } else
                 throw new RuntimeException();

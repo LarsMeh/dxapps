@@ -7,17 +7,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrimRunner extends Runner {
 
-    private private HashMap<Integer, Integer> m_map;
+    private HashMap<Integer, Integer> m_map;
 
-    public PrimRunner(final String p_name, HashMap<Integer, Integer> p_map, final int p_maxIterations, AtomicInteger p_atomicInteger) {
+    PrimRunner(final String p_name, HashMap<Integer, Integer> p_map, final int p_maxIterations, AtomicInteger p_atomicInteger) {
         super(p_name, p_atomicInteger, p_maxIterations);
+        m_map = p_map;
     }
 
     @Override
     public void run() {
         System.out.println("Start PrimRunner");
         int var;
-        while ((var = atomic.incrementAndGet()) < limit) {
+        while ((var = m_atomicInteger.incrementAndGet()) < m_maxIterations) {
             m_map.put(var, var + 1);
         }
         System.out.println("End PrimRunner");
