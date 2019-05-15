@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NonPrimRunner extends Runner {
     private final ByteArrayPool m_pool;
-    private final byte[][] m_valueSet = {{1, 2, 3}, {1}, {1, 2}};
+    private final byte[][] m_valueSet = {{1}, {2}, {3}};
     private int m_index;
     private HashMap<byte[], byte[]> m_map;
 

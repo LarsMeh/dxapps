@@ -1,6 +1,8 @@
 package de.hhu.bsinfo.dxapp;
 
 
+import de.hhu.bsinfo.dxram.datastructure.HashtableBenchmark;
+import de.hhu.bsinfo.dxmem.DXMem;
 import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.datastructure.DataStructureService;
 import de.hhu.bsinfo.dxram.datastructure.util.HashFunctions;
@@ -71,8 +73,8 @@ public class HashMapBenchmark extends Application {
     public void main(String[] p_args) {
 
         // local var
-        final int from = 2;
-        final int to = 4;
+        final int from = 4;
+        final int to = 6;
         final DataStructureService service = getService(DataStructureService.class);
         String path = "/home/mehnert/benchmarkLogs/";
         Benchmark benchmark;
@@ -82,12 +84,22 @@ public class HashMapBenchmark extends Application {
         final String data, type;
 
 
+        if(p_args[0].equals("hashtable")){
+
+            long heapSize = (long) Math.pow(2, 26);
+            DXMem memory = new DXMem((short) 1, heapSize);
+
+            HashtableBenchmark hashtableBenchmark = new HashtableBenchmark(new File(path), memory);
+
+            return;
+        }
+
         // Parse
         String[] current_args;
         switch (p_args.length) {
             case 1:
                 if (p_args[0].startsWith(ARG_HELP)) {
-                    System.out.println("Use " + SPLITTER + " to split argument and value of argument\n\nArguments which are required in the following order:\n\t" + ARG_TYPE + ": [" + TYPE_PERF + "," + TYPE_MEM + "]\n\t" + ARG_DATA + ": [" + DATA_PRIM + "," + DATA_NON_PRIM + "]\n\t" + ARG_ENTRIES + ": [positive Integer]\n\n " +
+                    log.info("Use " + SPLITTER + " to split argument and value of argument\n\nArguments which are required in the following order:\n\t" + ARG_TYPE + ": [" + TYPE_PERF + "," + TYPE_MEM + "]\n\t" + ARG_DATA + ": [" + DATA_PRIM + "," + DATA_NON_PRIM + "]\n\t" + ARG_ENTRIES + ": [positive Integer]\n\n " +
                             "Optional Argument:\n\t" + ARG_CORES + ": [positive Integer]");
                 } else
                     log.error("If you use 1 argument it must be help");
@@ -218,14 +230,14 @@ public class HashMapBenchmark extends Application {
      * @param p_expected argument which is expected
      * @return true if argument has length 2 and equals the expected
      */
-    private static boolean checkArgument(final String[] p_argument, final String p_expected) {
+    private boolean checkArgument(final String[] p_argument, final String p_expected) {
         if (p_argument.length != 2) {
-            System.err.println("Argument have to be splitted by '" + SPLITTER + "'");
+            log.error("Argument have to be splitted by '" + SPLITTER + "'");
             return false;
         } else if (p_argument[0].equals(p_expected)) {
             return true;
         } else {
-            System.err.println("Argument was: " + p_argument[0] + " but expected: " + p_expected);
+            log.error("Argument was: " + p_argument[0] + " but expected: " + p_expected);
             return false;
         }
     }
@@ -236,11 +248,11 @@ public class HashMapBenchmark extends Application {
      * @param p_type to be checked
      * @return true if type is valid
      */
-    private static boolean checkType(String p_type) {
+    private boolean checkType(String p_type) {
         if (p_type.equals(TYPE_MEM) || p_type.equals(TYPE_PERF))
             return true;
         else {
-            System.err.println("Value " + p_type + " for argument " + ARG_TYPE + " is invalid");
+            log.error("Value " + p_type + " for argument " + ARG_TYPE + " is invalid");
             return false;
         }
     }
@@ -251,11 +263,11 @@ public class HashMapBenchmark extends Application {
      * @param p_data to be checked
      * @return true if data is valid
      */
-    private static boolean checkData(String p_data) {
+    private boolean checkData(String p_data) {
         if (p_data.equals(DATA_PRIM) || p_data.equals(DATA_NON_PRIM))
             return true;
         else {
-            System.err.println("Value " + p_data + " for argument " + ARG_DATA + " is invalid");
+            log.error("Value " + p_data + " for argument " + ARG_DATA + " is invalid");
             return false;
         }
     }

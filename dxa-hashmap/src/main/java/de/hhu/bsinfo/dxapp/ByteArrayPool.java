@@ -33,6 +33,11 @@ class ByteArrayPool {
             m_next++;
     }
 
+    @Override
+    public String toString() {
+        return m_pool.get(m_next).toString();
+    }
+
     private class ByteArray {
 
         private byte[] m_arr;
@@ -40,7 +45,7 @@ class ByteArrayPool {
 
         private ByteArray(final int p_size) {
             m_arr = new byte[p_size];
-            m_arr[0] = -1;
+            m_arr[0] = Byte.MIN_VALUE;
             length = m_arr.length;
         }
 
@@ -50,11 +55,12 @@ class ByteArrayPool {
                     m_arr[i]++;
                     break;
                 } else
-                    m_arr[i] = 0;
+                    m_arr[i] = Byte.MIN_VALUE;
             }
             return m_arr;
         }
 
+        @Override
         public String toString() {
             return Arrays.toString(m_arr);
         }

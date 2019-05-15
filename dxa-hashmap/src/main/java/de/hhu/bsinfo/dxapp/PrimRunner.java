@@ -16,12 +16,10 @@ public class PrimRunner extends Runner {
 
     @Override
     public void run() {
-        System.out.println("Start PrimRunner");
         int var;
         while ((var = m_atomicInteger.incrementAndGet()) < m_maxIterations) {
             m_map.put(var, var + 1);
         }
-        System.out.println("End PrimRunner");
     }
 
 }
