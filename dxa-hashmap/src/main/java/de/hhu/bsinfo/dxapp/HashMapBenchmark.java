@@ -86,10 +86,9 @@ public class HashMapBenchmark extends Application {
 
         if(p_args[0].equals("hashtable")){
 
-            long heapSize = (long) Math.pow(2, 26);
-            DXMem memory = new DXMem((short) 1, heapSize);
+            HashtableBenchmark hashtableBenchmark = new HashtableBenchmark(new File(path));
 
-            HashtableBenchmark hashtableBenchmark = new HashtableBenchmark(new File(path), memory);
+            hashtableBenchmark.start();
 
             return;
         }
