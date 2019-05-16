@@ -84,9 +84,9 @@ public class HashMapBenchmark extends Application {
         final String data, type;
 
 
-        if(p_args[0].equals("hashtable")){
+        if (p_args[0].equals("hashtable")) {
 
-            HashtableBenchmark hashtableBenchmark = new HashtableBenchmark(new File(path));
+            HashtableBenchmark hashtableBenchmark = new HashtableBenchmark(new File(path + "hashtable.csv"));
 
             hashtableBenchmark.start();
 
